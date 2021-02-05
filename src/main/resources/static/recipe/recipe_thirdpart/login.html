@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Login - KitAdminCore</title>
+    <script>
+        if (window != window.top) top.location.href = self.location.href;
+    </script>
+    <link href="./plugins/layui/css/layui.css" rel="stylesheet" />
+    <link href="./plugins/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="./build/css/login.css" rel="stylesheet" />
+    <link href="./plugins/sideshow/css/normalize.css" rel="stylesheet" />
+    <link href="./plugins/sideshow/css/demo.css" rel="stylesheet" />
+    <link href="./plugins/sideshow/css/component.css" rel="stylesheet" />
+    <!--[if IE]>
+        <script src="./plugins/sideshow/js/html5.js"></script>
+    <![endif]-->
+    <style>
+        canvas {
+            position: absolute;
+            z-index: -1;
+        }
+        
+        .kit-login-box header h1 {
+            line-height: normal;
+        }
+        
+        .kit-login-box header {
+            height: auto;
+        }
+        
+        .content {
+            position: relative;
+        }
+        
+        .codrops-demos {
+            position: absolute;
+            bottom: 0;
+            left: 40%;
+            z-index: 10;
+        }
+        
+        .codrops-demos a {
+            border: 2px solid rgba(242, 242, 242, 0.41);
+            color: rgba(255, 255, 255, 0.51);
+        }
+        
+        .kit-pull-right button,
+        .kit-login-main .layui-form-item input {
+            background-color: transparent;
+            color: white;
+        }
+        
+        .kit-login-main .layui-form-item input::-webkit-input-placeholder {
+            color: white;
+        }
+        
+        .kit-login-main .layui-form-item input:-moz-placeholder {
+            color: white;
+        }
+        
+        .kit-login-main .layui-form-item input::-moz-placeholder {
+            color: white;
+        }
+        
+        .kit-login-main .layui-form-item input:-ms-input-placeholder {
+            color: white;
+        }
+        
+        .kit-pull-right button:hover {
+            border-color: #009688;
+            color: #009688
+        }
+    </style>
+</head>
+
+
+<body class="kit-login-bg">
+    <div class="container demo-1">
+        <div class="content">
+            <div id="large-header" class="large-header">
+                <canvas id="demo-canvas"></canvas>
+                <div class="kit-login-box">
+                    <header>
+                        <h1>处方模拟第三方返回 LOGIN</h1>
+                    </header>
+                    <div class="kit-login-main">
+                        <form class="layui-form">
+                            <div class="layui-form-item">
+                                <label class="kit-login-icon">
+                                    <i class="layui-icon">&#xe612;</i>
+                                </label>
+                                <input type="text" name="rid" lay-verify="required" placeholder="请输入rid" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="kit-login-icon">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </label>
+                                <input type="text" name="mobile" lay-verify="required" placeholder="请输入mobile" autocomplete="off"  class="layui-input">
+                            </div>
+                            <div class="layui-form-item">
+                                <label class="kit-login-icon">
+                                    <i class="layui-icon">&#xe642;</i>
+                                </label>
+                                <input type="password" name="pwd" lay-verify="required" placeholder="请输入pwd" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="kit-pull-right">
+                                    <button class="layui-btn layui-btn-primary" lay-submit lay-filter="login">
+                                        <i class="fa fa-sign-in" aria-hidden="true"></i> 登录
+                                    </button>
+                                </div>
+                                <div class="kit-clear"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <footer>
+                        <p>RECIPE © <a href="" style="color:white; font-size:18px;" target="_blank">ngarihealth</a></p>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /container -->
+
+    <script src="./plugins/layui/layui.js"></script>
+    <script src="./plugins/sideshow/js/TweenLite.min.js"></script>
+    <script src="./plugins/sideshow/js/EasePack.min.js"></script>
+    <script src="./plugins/sideshow/js/rAF.js"></script>
+    <script src="./plugins/sideshow/js/demo-1.js"></script>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function() {
+            var form = layui.form,
+                layer = layui.layer,
+                laydate = layui.laydate;
+
+            //监听提交
+            form.on('submit(login)', function(data) {
+
+                data.field.newParam = 'forAccessToken'
+                data.field.forAccessToken = true
+                layer.alert(JSON.stringify(data.field), {
+                    title: '最终的提交信息'
+                })
+                $.ajax({
+                    type: "POST",
+                    url:'${pageContext.request.contextPath}/logon/login',
+                    contentType : "application/json; charset=utf-8",
+                    data:JSON.stringify(data.field),
+                    dataType: "json",
+                    success: function (res) {
+                        layer.alert(JSON.stringify(data.field), {
+                            title: '最终的提交信息'
+                        })
+                    },
+                    error: function () {
+                    }
+                })
+                return false;
+            });
+
+
+        });
+    </script>
+
+</body>
+
+</html>

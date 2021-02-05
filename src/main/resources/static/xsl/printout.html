@@ -1,0 +1,167 @@
+<!DOCTYPE >
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body link="blue" vlink="purple" style="text-align: center">
+<table id="print-content" width="100%" border="1" cellpadding="0" cellspacing="0" style='border-collapse:collapse;table-layout:fixed;font-family:"SimSun"' align="center">
+    <style type="text/css">
+        #red{
+            color:red
+        }
+        @page{size: a5 landscape;}
+    </style>
+    <colgroup>
+        <col width="120 ">
+        <col width="120 ">
+        <col width="80 ">
+        <col width="150 ">
+        <col width="100 ">
+        <col width="80 ">
+        <col width="80 ">
+    </colgroup>
+    <tr height="40" style="text-align: center;font-size:20px;font-weight:bold">
+        <td colspan="11">深圳市第二人民医院互联网医院药房发药清单</td>
+    </tr>
+    <tr height="20" style="text-align: center;font-size:14px">
+        <td>姓名:</td>
+        <td colspan="2">张三</td>
+        <td>性别:</td>
+        <td colspan="2">男</td>
+        <td>年龄:</td>
+        <td colspan="2">32</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="20" style="text-align: center;font-size:14px">
+        <td>科室:</td>
+        <td colspan="2">外科</td>
+        <td>病历号:</td>
+        <td colspan="2">8366861</td>
+        <td>开方日期:</td>
+        <td colspan="2">2020-12-16 23:11:00</td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="24" style="text-align: center">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="20" style="text-align: center;font-size:14px">
+        <td>收货人姓名:</td>
+        <td colspan="2">王五</td>
+        <td></td>
+        <td>收货人电话:</td>
+        <td colspan="2">13400000000</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="20" style="text-align: center;font-size:14px">
+        <td>收货人地址:</td>
+        <td colspan="5">深圳市福田区华富大厦B-503</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="24" style="text-align: center">
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+    </tr>
+    <tr height="24" style="text-align: center;font-size:14px">
+        <td>药品名</td>
+        <td>商品名</td>
+        <td>规格</td>
+        <td>药品产地</td>
+        <td>单位</td>
+        <td>单价</td>
+        <td>开药总数</td>
+        <td>用量</td>
+        <td>使用频次</td>
+        <td>用法</td>
+        <td>总金额</td>
+    </tr>
+    <tr height="20" style="text-align: center;font-size:14px">
+        <td>复方利多卡因乳膏</td>
+        <td>复方利多卡因乳膏</td>
+        <td>10g*1支</td>
+        <td>上海上药信谊药厂有限公司</td>
+        <td>克</td>
+        <td>47.13</td>
+        <td>3</td>
+        <td>1克</td>
+        <td>每日二次</td>
+        <td>口服</td>
+        <td>133.86</td>
+    </tr>
+</table>
+
+<!-- 下载方法1.超链接_导出文件-->
+<a id="print-click">超链接_导出表格</a>
+<input type="button" onclick="printout()" value="打印"></input>
+<script>
+
+
+    // 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+    var html = "<html><head><meta charset='utf-8' /></head><body>" + document.getElementById("print-content").outerHTML + "</body></html>";
+    // 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+    var blob = new Blob([html], {
+        type: "application/vnd.ms-excel"
+    });
+    var a = document.getElementById("print-click");
+    // 利用URL.createObjectURL()方法为a元素生成blob URL
+    a.href = URL.createObjectURL(blob);
+    // 设置文件名，目前只有Chrome和FireFox支持此属性
+    a.download = "发药清单.xls";
+
+    //打印具体实现代码
+    function printout() {
+        debugger;
+        var newWindow;
+        //打开一个新的窗口
+        newWindow = window.open();
+        // 是新窗口获得焦点
+        newWindow.focus();
+
+        //保存写入内容
+        var newContent = "<html><head><meta charset='utf-8'/><title>打印</title></head><body>"
+        newContent += document.getElementById("print-content").outerHTML;
+        newContent += "</body></html>"
+        // 将HTML代码写入新窗口中
+        newWindow.document.write(newContent);
+
+        newWindow.print();
+        // close layout stream
+        newWindow.document.close();
+        //关闭打开的临时窗口
+        newWindow.close();
+        return false;
+    };
+
+</script>
+</body>
+
+</html>

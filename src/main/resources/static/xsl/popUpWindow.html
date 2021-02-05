@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>上传</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="plugins/layui/css/layui.css"  media="all">
+</head>
+<style>
+    .file{
+        margin-left: 30px;
+    }
+    .layui-form-item{
+        margin-right: 30px;
+    }
+    .first{
+        margin-top: 30px;
+    }
+</style>
+<body>
+<form class="layui-form" action="">
+    <div class="layui-form-item first">
+        <label class="layui-form-label">匹配药品的机构</label>
+        <div class="layui-input-block">
+            <select name="organ" lay-filter="aihao">
+                <option value=""></option>
+                <option value="0">写作</option>
+                <option value="1">阅读</option>
+                <option value="2">游戏</option>
+                <option value="3">音乐</option>
+                <option value="4">旅行</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">对照人</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入对照人" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">对照日期</label>
+        <div class="layui-input-block">
+            <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">是否新增药品对照</label>
+        <div class="layui-input-block">
+            <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">
+        </div>
+    </div>
+</form>
+<div class="file">
+<button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>上传文件</button>
+</div>
+<script src="plugins/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use(['laydate','form','upload'],function(){
+        var $ = layui.jquery
+            , upload = layui.upload
+            , laydate = layui.laydate
+            , form = layui.form;
+        //日期
+        laydate.render({
+            elem: '#date'
+        });
+        //自定义验证规则
+        form.verify({
+            title: function(value){
+                if(value.length < 1){
+                    return '此项是必填项';
+                }
+            }
+        });
+        //指定允许上传的文件类型
+        upload.render({
+            elem: '#test3'
+            , url: '/api/upload'
+            , accept: 'file' //普通文件
+            , before: function(obj){
+                layer.load(); //上传loading
+            }
+            , done: function (res) {
+                layer.closeAll('loading'); //关闭loading
+                console.log(res)
+                if (res.code != 200){
+                    layer.msg(res.msg)
+                }else {
+                    layer.closeAll();
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

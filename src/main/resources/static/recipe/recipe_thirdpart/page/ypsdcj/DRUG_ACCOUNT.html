@@ -1,0 +1,368 @@
+<!-- 药品名称销项监管-已售药品名称过期 -->
+    <link rel="stylesheet" href="../../layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../css/app.css" media="all">
+<div class="kit-table">
+    <form class="layui-form" lay-filter="kit-search-form">
+        <div class="kit-table-header">
+              <div class="kit-search-inputs">
+                  <div class="layui-inline">
+                      <label class="layui-form-label" style="padding:9px 5px;">搜索时间段</label>
+                      <div class="layui-input-inline" style="width: 100px;height:30px;">
+		        		<input type='text' name='begindata' class='layui-input' id='begindata' placeholder='yyyy-MM-dd'>
+                      </div>
+                      <div class="layui-input-inline" style="width: 100px;height:30px;"">
+		        		<input type='text' name='enddata' class='layui-input' id='enddata' placeholder='yyyy-MM-dd'>
+                      </div>
+                  </div>
+                  <button lay-submit lay-filter="search"><a class="layui-btn search_btn" data-type="reload">搜索</a></button>
+              </div>
+              <!-- 
+             <div class="kit-search-inputs">
+                <div class="kit-search-keyword">
+                    <input type="text" class="layui-input" name="keyword" placeholder="搜索关键字.." />
+                    <button lay-submit lay-filter="search"><i class="layui-icon">&#xe615;</i></button>
+                </div>
+                <div class="kit-search-more" id="kit-search-more">更多筛选<i class="layui-icon">&#xe61a;</i></div>
+            </div>
+             -->
+        </div>
+    </form>
+    <div class="kit-table-body">
+        <table id="demo" lay-filter="demo"></table>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="detail">查看</a>
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+    </div>
+</div>
+
+
+<script type="text/html" id="edit-tpl">
+    <div style="margin:10px">
+        <form class="layui-form" action="" lay-filter="form-edit">
+            <input type="hidden" name="id" value="{{d.user.id}}" />
+                       <div class="layui-form-item">
+                <label class="layui-form-label">药品名称器械通用名称</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入药品名称"  type="text" name="DRUGNAME" required lay-verify="required" value="{{d.user.DRUGNAME==undefined?'':d.user.DRUGNAME}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">生产厂家（中药标明产地）</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入厂家" type="text" name="MENUFACTOR" required lay-verify="required" value="{{d.user.MENUFACTOR==undefined?'':d.user.MENUFACTOR}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">供货单位</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入供货单位" type="text" name="SUPPLYUNIT" required lay-verify="required" value="{{d.user.SUPPLYUNIT==undefined?'':d.user.SUPPLYUNIT}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">医保编码</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入医保编码" type="text" name="MEDICALINSURANCECODE" required lay-verify="required" value="{{d.user.MEDICALINSURANCECODE==undefined?'':d.user.MEDICALINSURANCECODE}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">协议销售价格</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入协议价格" type="text" name="PRICE_AGREE" required lay-verify="required" value="{{d.user.PRICE_AGREE==undefined?'':d.user.PRICE_AGREE}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">进销差价比例</label>
+                <div class="layui-input-block">
+                    <input placeholder="请输入进销比例" type="text" name="SCALE" required lay-verify="required" value="{{d.user.SCALE==undefined?'':d.user.SCALE}}" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" style="display:none;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formEdit">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+<script type="text/javascript" src="../../layui/layui.js"></script>
+<script>
+    layui.use(['table','laydate'], function() {
+        var table = layui.table,
+            $ = layui.jquery,
+            layer = layui.layer,
+            form = layui.form,
+            laydate = layui.laydate,
+            laytpl = layui.laytpl;
+        
+      //常规用法
+        laydate.render({
+          elem: '#begindata'
+        });
+        laydate.render({
+          elem: '#enddata'
+        });
+        
+        var tableIns = table.render({
+            elem: '#demo',
+            height: 'full-50', //容器高度
+            url: '../../../DRUG_ACCOUNT/ypjxccx.do',
+            page: true,
+            id: 'demo',
+            limit: 20,
+            cols: [
+                [{
+                    checkbox: true,
+                    fixed: true
+                }, {
+                    field: 'ACCOUNTDATE',
+                    title: '数据产生日期',
+                    width: 80
+                }, {
+                    field: 'DATASOURCE',
+                    title: '数据来源表',
+                    width: 120
+                }, {
+                    field: 'VALLDDATE',
+                    title: '药品名称截止有效期',
+                    width: 80
+                }, {
+                    field: 'DRUGSTORECODE',
+                    title: '药品名称器械通用名称',
+                    width: 80
+                }, {
+                    field: 'DRUGSTORENAME',
+                    title: '生产厂家（中药标明产地）',
+                    width: 100
+                }, {
+                    field: 'DRUGNAME',
+                    title: '医药机构机构编码',
+                    width: 80
+                }, {
+                    field: 'MENUFACTORY',
+                    title: '机构名称',
+                    width: 80
+                }, {
+                    field: 'DRUGBATCH',
+                    title: '有效期',
+                    width: 80
+                }, {
+                    field: 'QUANTY',
+                    title: '药品批次',
+                    width: 80
+                }, {
+                    field: 'SCALE',
+                    title: '数量',
+                    width: 80
+                }, {
+                    fixed: 'right',
+                    title: '操作',
+                    width: 150,
+                    align: 'center',
+                    toolbar: '#barDemo'
+                }]
+            ],
+            done: function(res, curr, count) {
+                //如果是异步请求数据方式，res即为你接口返回的信息。
+                //如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+                // console.log(res);
+                // //得到当前页码
+                // console.log(curr);
+                // //得到数据总量
+                // console.log(count);
+            },
+            loading: true,
+            method: 'post'
+        });
+        var staticData = {
+            citys: [{
+                id: 0,
+                name: '北京'
+            }, {
+                id: 1,
+                name: '广州'
+            }, {
+                id: 2,
+                name: '深圳'
+            }, {
+                id: 3,
+                name: '杭州'
+            }],
+            classifies: [{
+                id: 0,
+                name: '词人'
+            }, {
+                id: 1,
+                name: '诗人'
+            }, {
+                id: 2,
+                name: '作家'
+            }, {
+                id: 3,
+                name: '酱油'
+            }]
+        };
+        //监听搜索表单提交
+        form.on('submit(search)', function(data) {
+            console.log(data.field);
+            layer.msg(JSON.stringify(data.field));
+            //带条件查询
+            tableIns.reload({
+                where: data.field
+            });
+            return false;
+        });
+        //监听工具条
+        table.on('tool(demo)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'detail') { //查看
+                console.log(table.checkStatus('demo'));
+                //do somehing
+            } else if (layEvent === 'del') { //删除
+                layer.confirm('真的删除行么', function(index) {
+                    obj.del(); //删除对应行（tr）的DOM结构
+                    layer.close(index);
+                    //向服务端发送删除指令
+                });
+            } else if (layEvent === 'warn') { //删除
+            	var d = {
+                        user: data,
+                        citys: staticData.citys,
+                        classifies: staticData.classifies
+                    };
+            	 laytpl($('#edit-tpl').html()).render(d, function(html) {
+                     layer.open({
+                         type: 1,
+                         title: '表单',
+                         content: html,
+                         area: ['750px', '500px'],
+                         btn: ['提交', '重置', '取消'],
+                         yes: function(index, layero) {
+                             editIndex = index;
+                             $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
+                         },
+                         btn2: function(index, layero) {
+                             $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
+                             return false;
+                         },
+                         success: function() {
+                             form.render(null, 'form-edit');
+                         }
+                     });
+                 });
+                 //同步更新缓存对应的值
+                 // obj.update({
+                 //     username: '123',
+                 //     title: 'xxx'
+                 // });
+            } else if (layEvent === 'edit') { //编辑
+                var d = {
+                    user: data,
+                    citys: staticData.citys,
+                    classifies: staticData.classifies
+                };
+                //do something
+                laytpl($('#edit-tpl').html()).render(d, function(html) {
+                    layer.open({
+                        type: 1,
+                        title: '表单',
+                        content: html,
+                        area: ['800px', '600px'],
+                        btn: ['提交', '重置', '取消'],
+                        yes: function(index, layero) {
+                            editIndex = index;
+                            $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
+                        },
+                        btn2: function(index, layero) {
+                            $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
+                            return false;
+                        },
+                        success: function() {
+                            form.render(null, 'form-edit');
+                        }
+                    });
+                });
+                //同步更新缓存对应的值
+                // obj.update({
+                //     username: '123',
+                //     title: 'xxx'
+                // });
+            }
+        });
+        form.render(null, 'kit-search-form');
+        $('#kit-search-more').on('click', function() {
+            $('.kit-search-mored').toggle();
+        });
+        var editIndex;
+        form.on('submit(formEdit)', function(data) {
+            layer.msg('formEdit');
+            editIndex && layer.close(editIndex); //关闭弹出层
+            return false;
+        });
+        $('.kit-search-btns').children('a').off('click').on('click', function() {
+            var $that = $(this),
+                action = $that.data('action');
+            switch (action) {
+                case 'add':
+                    var d = {
+                        user: {
+                        	DRUGNAME: '',
+                        	MENUFACTOR: '',
+                        	SUPPLYUNIT: '',
+                        	MEDICALINSURANCECODE: '',
+                        	PRICE_AGREE: 0,
+                        	SCALE: ''
+                        },
+                        citys: staticData.citys,
+                        classifies: staticData.classifies
+                    };
+                    //渲染
+                    laytpl($('#edit-tpl').html()).render(d,
+                        function(html) {
+                            layer.open({
+                                type: 1,
+                                title: '表单',
+                                content: html,
+                                area: ['750px', '500px'],
+                                btn: ['提交', '重置', '取消'],
+                                yes: function(index, layero) {
+                                    editIndex = index;
+                                    $('form[lay-filter="form-edit"]').find('button[lay-submit]').click();
+                                },
+                                btn2: function(index, layero) {
+                                    $('form[lay-filter="form-edit"]').find('button[type="reset"]').click();
+                                    return false;
+                                },
+                                success: function() {
+                                    form.render(null, 'form-edit');
+                                }
+                            });
+                        });
+                    break;
+                case 'del-bulk':
+                    var d = table.checkStatus('demo');
+                    if (d.data.length === 0) {
+                        layer.msg('请选择要删除的数据');
+                        return;
+                    }
+                    var data = d.data,
+                        names = [],
+                        ids = [];
+                    layui.each(data, function(index, item) {
+                        console.log(item);
+                        names.push(item.username);
+                        ids.push(item.id);
+                    });
+                    layer.msg(names.join(','));
+                    console.log(ids.join(','));
+                    break;
+            }
+        });
+    });
+</script>
