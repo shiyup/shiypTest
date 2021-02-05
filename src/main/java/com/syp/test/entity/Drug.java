@@ -1,4 +1,4 @@
-package com.syp.recipe.entity;
+package com.syp.test.entity;
 
 import lombok.Data;
 

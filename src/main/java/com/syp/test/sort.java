@@ -1,4 +1,4 @@
-package com.syp.recipe;
+package com.syp.test;
 
 import java.util.Arrays;
 
