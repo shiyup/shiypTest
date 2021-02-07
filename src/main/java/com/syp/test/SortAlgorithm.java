@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * created by shiyuping on 2019/1/22
  */
-public class sort {
+public class SortAlgorithm {
 
     public static void main(String[] args){
         int[] a = {1,3,2,7,9,4,6,8,5,11,12,13,14,15,16};

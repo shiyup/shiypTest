@@ -1,4 +1,4 @@
-package com.syp.test;
+package com.syp.test.concurrent;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
