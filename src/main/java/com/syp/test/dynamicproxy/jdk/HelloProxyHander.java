@@ -17,7 +17,7 @@ public class HelloProxyHander implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         System.out.println("before ...invoke..."+method.getName());
         method.invoke(subject,args);
-        System.out.println("before ...invoke..."+method.getName());
+        System.out.println("after ...invoke..."+method.getName());
         return null;
     }
 }
