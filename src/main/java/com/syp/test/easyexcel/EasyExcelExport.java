@@ -22,6 +22,8 @@ public class EasyExcelExport {
                 .sheet().doRead();*/
         Long goodId = 100000000001L;
         Long skuId = 200000000001L;
+        String storeCode = "S00000001";
+        String merchantCode = "M000000001";
         String sqlTemp = "INSERT INTO `t_pharmacy_store_goods` (`standard_id`, `goods_id`, `store_code`, `merchant_code`, `common_name`, `goods_name`, `producer`, " +
                 "`approval_num`, `drug_type`, `category_array`, `first_category_name`, `return_rule`, `is_cold_chain`, " +
                 "`goods_image`, `sku_id`, `spec`, `market_price`, `sale_price`, `cost_price`, `stock`, `sale_unit`, " +
@@ -42,8 +44,8 @@ public class EasyExcelExport {
             for (DrugData data : drugData) {
                 String sql = sqlTemp.replace("{standard_id}", data.getStandardId())
                         .replace("{goods_id}", goodId + 1 + "")
-                        .replace("{store_code}", "S00000001")
-                        .replace("{merchant_code}", "M000000001")
+                        .replace("{store_code}", storeCode)
+                        .replace("{merchant_code}", merchantCode)
                         .replace("{common_name}", data.getCommonName())
                         .replace("{goods_name}", data.getGoodsName())
                         .replace("{producer}", data.getProducer())
