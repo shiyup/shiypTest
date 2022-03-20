@@ -1,0 +1,117 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+:root,body{
+    height: 100%;
+    width: 100%;
+    background-color: black;
+}
+/* 最外层容器样式 */
+.container{
+    width: 200px;
+    height: 200px;
+    position: absolute;
+    perspective: 2000px;
+    /* 调整视距 */
+    top: calc(50% - 100px);
+    left: calc(50% - 100px);
+    /* 垂直水平居中 */
+}
+/*立方体容器样式*/
+.cube{
+    width: 200px;
+    height: 200px;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg) rotateY(-80deg);
+    animation: roddy 10s linear infinite;
+    /*设置动画匀速重复*/
+}
+@keyframes roddy{
+    0%{transform: rotateX(0deg) rotateY(0deg);}
+    100%{transform: rotateX(360deg) rotateY(360deg);}
+}
+.cube div{
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    opacity: 0.8;
+    /* 设置透明度 */
+    transition: all 0.4s;
+    /* 过渡动画 */
+}
+/* 外面照片大小设置 */
+.out_pic{
+    width: 200px;
+    height: 200px;
+}
+.cube .out_front{
+    transform: rotateY(0deg) translateZ(100px);
+}
+.cube .out_back{
+    transform: rotateY(180deg) translateZ(100px);
+}
+.cube .out_left{
+    transform: rotateY(90deg) translateZ(100px);
+}
+.cube .out_right{
+    transform: rotateY(-90deg) translateZ(100px);
+}
+.cube .out_top{
+    transform: rotateX(90deg) translateZ(100px);
+}
+.cube .out_bottom{
+    transform: rotateX(-90deg) translateZ(100px);
+}
+
+.cube #small{
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    top: 50px;
+    left: 50px;
+}
+/* 里面照片大小设置 */
+.in_pic{
+    width: 100px;
+    height: 100px;
+}
+
+.cube .in_front{
+    transform: rotateY(0deg) translateZ(50px);
+}
+.cube .in_back{
+    transform: rotateY(180deg) translateZ(50px) ;
+}
+.cube .in_left{
+    transform: rotateY(90deg) translateZ(50px);
+}
+.cube .in_right{
+    transform: rotateY(-90deg) translateZ(50px);
+}
+.cube .in_top{
+    transform: rotateX(90deg) translateZ(50px);
+}
+.cube .in_bottom{
+    transform: rotateX(-90deg) translateZ(50px);
+}
+
+/*鼠标移入后样式*/
+.cube:hover .out_front{
+    transform: rotateY(0deg) translateZ(200px);
+}
+.cube:hover .out_back{
+    transform: rotateY(180deg) translateZ(200px);
+}
+.cube:hover .out_left{
+    transform: rotateY(90deg) translateZ(200px);
+}
+.cube:hover .out_right{
+    transform: rotateY(-90deg) translateZ(200px);
+}
+.cube:hover .out_top{
+    transform: rotateX(90deg) translateZ(200px);
+}
+.cube:hover .out_bottom{
+    transform: rotateX(-90deg) translateZ(200px);
+}
