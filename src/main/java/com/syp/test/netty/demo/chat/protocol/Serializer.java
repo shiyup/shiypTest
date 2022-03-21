@@ -1,7 +1,6 @@
 package com.syp.test.netty.demo.chat.protocol;
 
 import com.google.gson.*;
-
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;

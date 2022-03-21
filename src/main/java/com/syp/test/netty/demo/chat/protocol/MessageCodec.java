@@ -1,6 +1,6 @@
 package com.syp.test.netty.demo.chat.protocol;
 
-import cn.itcast.message.Message;
+import com.syp.test.netty.demo.chat.message.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

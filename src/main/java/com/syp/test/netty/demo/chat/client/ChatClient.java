@@ -23,6 +23,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public class ChatClient {
+
     public static void main(String[] args) {
         NioEventLoopGroup group = new NioEventLoopGroup();
         LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
@@ -51,7 +52,7 @@ public class ChatClient {
                             IdleStateEvent event = (IdleStateEvent) evt;
                             // 触发了写空闲事件
                             if (event.state() == IdleState.WRITER_IDLE) {
-//                                log.debug("3s 没有写数据了，发送一个心跳包");
+                                log.debug("3s 没有写数据了，发送一个心跳包");
                                 ctx.writeAndFlush(new PingMessage());
                             }
                         }
@@ -75,6 +76,8 @@ public class ChatClient {
                         // 在连接建立后触发 active 事件
                         @Override
                         public void channelActive(ChannelHandlerContext ctx) throws Exception {
+                            log.debug("连接建立...{}",ctx.channel());
+
                             // 负责接收用户在控制台的输入，负责向服务器发送各种消息
                             new Thread(() -> {
                                 System.out.println("请输入用户名:");

@@ -1,6 +1,6 @@
 package com.syp.test.netty.demo.chat.server.service;
 
-import cn.itcast.config.Config;
+import com.syp.test.netty.demo.chat.config.Config;
 
 import java.io.IOException;
 import java.io.InputStream;

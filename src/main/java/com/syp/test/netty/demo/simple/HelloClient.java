@@ -30,7 +30,7 @@ public class HelloClient {
                         }
                     })
                     // 指定要连接的服务器和端口
-                    .connect(new InetSocketAddress("localhost", 8080))
+                    .connect("127.0.0.1", 8080)
                     // Netty 中很多方法都是异步的，如 connect
                     // 这时需要使用 sync 方法等待 connect 建立连接完毕
                     .sync()

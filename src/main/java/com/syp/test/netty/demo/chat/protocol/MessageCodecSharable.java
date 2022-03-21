@@ -1,8 +1,8 @@
 package com.syp.test.netty.demo.chat.protocol;
 
-import cn.itcast.config.Config;
-import cn.itcast.message.LoginRequestMessage;
-import cn.itcast.message.Message;
+import com.syp.test.netty.demo.chat.config.Config;
+import com.syp.test.netty.demo.chat.message.LoginRequestMessage;
+import com.syp.test.netty.demo.chat.message.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
