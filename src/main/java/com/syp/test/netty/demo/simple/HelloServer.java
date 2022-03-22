@@ -1,26 +1,26 @@
 package com.syp.test.netty.demo.simple;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.EventLoopGroup;
-import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.logging.LoggingHandler;
+
+import static jdk.nashorn.internal.objects.NativeFunction.bind;
 
 /**
  * Created by shiyuping on 2022/3/20 5:20 下午
  */
 public class HelloServer {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         //Reactor主从线程模型
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         // 1、启动器，负责装配netty组件，启动服务器
         try {
-            new ServerBootstrap()
+            ServerBootstrap serverBootstrap = new ServerBootstrap()
                     // 2、创建 NioEventLoopGroup，可以简单理解为 线程池 + Selector
                     .group(bossGroup, workerGroup)
                     // 3、选择服务器的 ServerSocketChannel 实现
@@ -32,6 +32,7 @@ public class HelloServer {
                         @Override
                         protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
                             // 5、SocketChannel的处理器，使用StringDecoder解码，ByteBuf=>String
+                            nioSocketChannel.pipeline().addLast(new LoggingHandler());
                             nioSocketChannel.pipeline().addLast(new StringDecoder());
                             // 6、SocketChannel的业务处理，使用上一个处理器的处理结果
                             nioSocketChannel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
@@ -40,9 +41,14 @@ public class HelloServer {
                                     System.out.println(s);
                                 }
                             });
+
                         }
-                        // 7、ServerSocketChannel绑定8080端口
-                    }).bind(8080);
+
+                    });
+            // 7、ServerSocketChannel绑定8080端口
+            //bind() 方法会真正触发启动，sync() 方法则会阻塞，直至整个启动过程完成
+            ChannelFuture f = serverBootstrap.bind(8080).sync();
+            f.channel().closeFuture().sync();
         } finally {
             //优雅关闭
             bossGroup.shutdownGracefully();
