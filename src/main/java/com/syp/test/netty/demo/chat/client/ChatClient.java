@@ -25,9 +25,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ChatClient {
 
     public static void main(String[] args) {
+        connect();
+    }
+    public static void connect(){
+        doConnect("127.0.0.1",8080);
+    }
+    public static void doConnect(String ip,Integer port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
-        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
+
         CountDownLatch WAIT_FOR_LOGIN = new CountDownLatch(1);
         AtomicBoolean LOGIN = new AtomicBoolean(false);
         AtomicBoolean EXIT = new AtomicBoolean(false);
@@ -40,7 +45,8 @@ public class ChatClient {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new ProcotolFrameDecoder());
-                    ch.pipeline().addLast(MESSAGE_CODEC);
+                    //ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+                    ch.pipeline().addLast(new MessageCodecSharable());
                     // 用来判断是不是 读空闲时间过长，或 写空闲时间过长
                     // 3s 内如果没有向服务器写数据，会触发一个 IdleState#WRITER_IDLE 事件
                     ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
@@ -52,7 +58,7 @@ public class ChatClient {
                             IdleStateEvent event = (IdleStateEvent) evt;
                             // 触发了写空闲事件
                             if (event.state() == IdleState.WRITER_IDLE) {
-                                log.debug("3s 没有写数据了，发送一个心跳包");
+                                //log.debug("3s 没有写数据了，发送一个心跳包");
                                 ctx.writeAndFlush(new PingMessage());
                             }
                         }
@@ -148,6 +154,7 @@ public class ChatClient {
                                             ctx.writeAndFlush(new GroupQuitRequestMessage(username, s[1]));
                                             break;
                                         case "quit":
+                                            EXIT.set(true);
                                             ctx.channel().close();
                                             return;
                                     }
@@ -158,20 +165,26 @@ public class ChatClient {
                         // 在连接断开时触发
                         @Override
                         public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                            log.debug("连接已经断开，按任意键退出..");
-                            EXIT.set(true);
+                            //EXIT.set(true);
+                            if (EXIT.get()){
+                                log.debug("连接已经断开，按任意键退出...");
+                            }else {
+                                //非正常退出时断线重连
+                                log.debug("连接已经断开，正在重连....");
+                                connect();
+                            }
                         }
 
                         // 在出现异常时触发
                         @Override
                         public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-                            log.debug("连接已经断开，按任意键退出..{}", cause.getMessage());
+                            log.debug("出现异常，连接已经断开，按任意键退出..{}", cause.getMessage());
                             EXIT.set(true);
                         }
                     });
                 }
             });
-            Channel channel = bootstrap.connect("localhost", 8080).sync().channel();
+            Channel channel = bootstrap.connect(ip, port).sync().channel();
             channel.closeFuture().sync();
         } catch (Exception e) {
             log.error("client error", e);

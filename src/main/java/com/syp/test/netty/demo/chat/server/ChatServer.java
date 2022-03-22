@@ -21,8 +21,6 @@ public class ChatServer {
     public static void main(String[] args) {
         NioEventLoopGroup boss = new NioEventLoopGroup();
         NioEventLoopGroup worker = new NioEventLoopGroup();
-        LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
-        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
         LoginRequestMessageHandler LOGIN_HANDLER = new LoginRequestMessageHandler();
         ChatRequestMessageHandler CHAT_HANDLER = new ChatRequestMessageHandler();
         GroupCreateRequestMessageHandler GROUP_CREATE_HANDLER = new GroupCreateRequestMessageHandler();
@@ -39,8 +37,8 @@ public class ChatServer {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new ProcotolFrameDecoder());
-                    ch.pipeline().addLast(LOGGING_HANDLER);
-                    ch.pipeline().addLast(MESSAGE_CODEC);
+                    ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+                    ch.pipeline().addLast(new MessageCodecSharable());
                     // 用来判断是不是 读空闲时间过长，或 写空闲时间过长
                     // 5s 内如果没有收到 channel 的数据，会触发一个 IdleState#READER_IDLE 事件
                     ch.pipeline().addLast(new IdleStateHandler(5, 0, 0));
@@ -52,7 +50,7 @@ public class ChatServer {
                             IdleStateEvent event = (IdleStateEvent) evt;
                             // 触发了读空闲事件
                             if (event.state() == IdleState.READER_IDLE) {
-                                log.debug("已经 5s 没有读到数据了");
+                                log.debug("已经 5s 没有读到数据了, 断开与client的连接");
                                 ctx.channel().close();
                             }
                         }
