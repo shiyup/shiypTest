@@ -34,7 +34,7 @@ public class Client {
                             // 每次发送16个字节的数据，共发送10次
                             for (int i = 0; i < 10; i++) {
                                 ByteBuf buffer = ctx.alloc().buffer();
-                                buffer.writeBytes(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15});
+                                buffer.writeBytes(new byte[]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16});
                                 ctx.writeAndFlush(buffer);
                             }
                         }

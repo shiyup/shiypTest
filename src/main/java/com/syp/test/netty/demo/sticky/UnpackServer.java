@@ -5,6 +5,7 @@ import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -24,12 +25,15 @@ public class UnpackServer {
             serverBootstrap
                     .channel(NioServerSocketChannel.class)
                     .group(boss, worker)
-                    //调整channel的容量
-                    .option(ChannelOption.SO_RCVBUF, 10)
+                    //调整channel的容量（系统接受的缓冲区（滑动窗口））
+                    //.option(ChannelOption.SO_RCVBUF, 10)
+                    //应用层的接收缓冲区-netty默认的接收缓冲区（ByteBuf）大小是1024
+                    .childOption(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator(16,16,16))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) {
                             ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
+                            //ch.pipeline().addLast(new LengthFieldBasedFrameDecoder());
                             ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
                                 @Override
                                 public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -47,10 +51,7 @@ public class UnpackServer {
                             });
                         }
                     });
-            ChannelFuture channelFuture = serverBootstrap.bind(8080);
-            log.debug("{} binding...", channelFuture.channel());
-            channelFuture.sync();
-            log.debug("{} bound...", channelFuture.channel());
+            ChannelFuture channelFuture = serverBootstrap.bind(8080).sync();
             // 关闭channel
             channelFuture.channel().closeFuture().sync();
         } catch (InterruptedException e) {
