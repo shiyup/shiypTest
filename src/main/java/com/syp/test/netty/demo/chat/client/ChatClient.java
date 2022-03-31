@@ -32,7 +32,8 @@ public class ChatClient {
     }
     public static void doConnect(String ip,Integer port) {
         NioEventLoopGroup group = new NioEventLoopGroup();
-
+        //LoggingHandler LOGGING_HANDLER = new LoggingHandler(LogLevel.DEBUG);
+        MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
         CountDownLatch WAIT_FOR_LOGIN = new CountDownLatch(1);
         AtomicBoolean LOGIN = new AtomicBoolean(false);
         AtomicBoolean EXIT = new AtomicBoolean(false);
@@ -45,8 +46,7 @@ public class ChatClient {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
                     ch.pipeline().addLast(new ProcotolFrameDecoder());
-                    //ch.pipeline().addLast(new LoggingHandler(LogLevel.DEBUG));
-                    ch.pipeline().addLast(new MessageCodecSharable());
+                    ch.pipeline().addLast(MESSAGE_CODEC);
                     // 用来判断是不是 读空闲时间过长，或 写空闲时间过长
                     // 3s 内如果没有向服务器写数据，会触发一个 IdleState#WRITER_IDLE 事件
                     ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
