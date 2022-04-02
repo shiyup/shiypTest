@@ -27,7 +27,7 @@ public class UnpackServer {
                     .group(boss, worker)
                     //调整channel的容量（系统接受的缓冲区（滑动窗口））
                     //.option(ChannelOption.SO_RCVBUF, 10)
-                    //应用层的接收缓冲区-netty默认的接收缓冲区（ByteBuf）大小是1024
+                    //应用层的接收缓冲区-netty默认的接收缓冲区（ByteBuf）大小是1024,4.1.59版本更新为了2048
                     .childOption(ChannelOption.RCVBUF_ALLOCATOR, new AdaptiveRecvByteBufAllocator(16,16,16))
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
