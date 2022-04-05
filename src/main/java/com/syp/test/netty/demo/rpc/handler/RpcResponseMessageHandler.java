@@ -1,4 +1,4 @@
-package com.syp.test.netty.demo.chat.client.handler;
+package com.syp.test.netty.demo.rpc.handler;
 
 
 import com.syp.test.netty.demo.chat.message.RpcResponseMessage;

@@ -1,8 +1,7 @@
 package com.syp.test.netty.demo.chat.server;
 
-import com.syp.test.netty.demo.chat.message.GroupJoinRequestMessage;
 import com.syp.test.netty.demo.chat.protocol.MessageCodecSharable;
-import com.syp.test.netty.demo.chat.protocol.ProcotolFrameDecoder;
+import com.syp.test.netty.demo.chat.protocol.ProtocolFrameDecoder;
 import com.syp.test.netty.demo.chat.server.handler.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
@@ -40,7 +39,7 @@ public class ChatServer {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             ch.pipeline()
-                                    .addLast(new ProcotolFrameDecoder())
+                                    .addLast(new ProtocolFrameDecoder())
                                     .addLast(LOGGING_HANDLER)
                                     .addLast(MESSAGE_CODEC)
                                     // 用来判断是不是 读空闲时间过长，或 写空闲时间过长

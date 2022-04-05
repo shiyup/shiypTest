@@ -1,9 +1,9 @@
-package com.syp.test.netty.demo.chat.client;
+package com.syp.test.netty.demo.rpc;
 
 import com.syp.test.netty.demo.chat.message.RpcRequestMessage;
 import com.syp.test.netty.demo.chat.protocol.MessageCodecSharable;
-import com.syp.test.netty.demo.chat.protocol.ProcotolFrameDecoder;
-import com.syp.test.netty.demo.chat.client.handler.RpcResponseMessageHandler;
+import com.syp.test.netty.demo.chat.protocol.ProtocolFrameDecoder;
+import com.syp.test.netty.demo.rpc.handler.RpcResponseMessageHandler;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -27,7 +27,7 @@ public class RpcClient {
             bootstrap.handler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new ProcotolFrameDecoder());
+                    ch.pipeline().addLast(new ProtocolFrameDecoder());
                     ch.pipeline().addLast(LOGGING_HANDLER);
                     ch.pipeline().addLast(MESSAGE_CODEC);
                     ch.pipeline().addLast(RPC_HANDLER);

@@ -1,8 +1,8 @@
-package com.syp.test.netty.demo.chat.server;
+package com.syp.test.netty.demo.rpc;
 
 import com.syp.test.netty.demo.chat.protocol.MessageCodecSharable;
-import com.syp.test.netty.demo.chat.protocol.ProcotolFrameDecoder;
-import com.syp.test.netty.demo.chat.server.handler.RpcRequestMessageHandler;
+import com.syp.test.netty.demo.chat.protocol.ProtocolFrameDecoder;
+import com.syp.test.netty.demo.rpc.handler.RpcRequestMessageHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelInitializer;
@@ -28,7 +28,7 @@ public class RpcServer {
             serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
                 @Override
                 protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new ProcotolFrameDecoder());
+                    ch.pipeline().addLast(new ProtocolFrameDecoder());
                     ch.pipeline().addLast(LOGGING_HANDLER);
                     ch.pipeline().addLast(MESSAGE_CODEC);
                     ch.pipeline().addLast(RPC_HANDLER);
