@@ -1,6 +1,10 @@
 package com.syp.test.netty.demo.chat.protocol;
 
+import com.caucho.hessian.io.HessianSerializerInput;
+import com.caucho.hessian.io.HessianSerializerOutput;
 import com.google.gson.*;
+import com.sun.xml.internal.ws.encoding.soap.SerializationException;
+
 import java.io.*;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
@@ -55,6 +59,64 @@ public interface Serializer {
                 Gson gson = new GsonBuilder().registerTypeAdapter(Class.class, new ClassCodec()).create();
                 String json = gson.toJson(object);
                 return json.getBytes(StandardCharsets.UTF_8);
+            }
+        },
+
+        Hessian{
+            @Override
+            public <T> T deserialize(Class<T> clazz, byte[] bytes) {
+                if (bytes == null) {
+
+                    throw new NullPointerException();
+
+                }
+
+                T result;
+
+                try (ByteArrayInputStream is = new ByteArrayInputStream(bytes)) {
+
+                    HessianSerializerInput hessianInput = new HessianSerializerInput(is);
+
+                    result = (T) hessianInput.readObject(clazz);
+
+                } catch (Exception e) {
+
+                    throw new SerializationException(e);
+
+                }
+
+                return result;
+            }
+
+            @Override
+            public <T> byte[] serialize(T object) {
+                if (object == null) {
+
+                    throw new NullPointerException();
+
+                }
+
+                byte[] results;
+
+                HessianSerializerOutput hessianOutput;
+
+                try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+
+                    hessianOutput = new HessianSerializerOutput(os);
+
+                    hessianOutput.writeObject(object);
+
+                    hessianOutput.flush();
+
+                    results = os.toByteArray();
+
+                } catch (Exception e) {
+
+                    throw new SerializationException(e);
+
+                }
+
+                return results;
             }
         }
     }

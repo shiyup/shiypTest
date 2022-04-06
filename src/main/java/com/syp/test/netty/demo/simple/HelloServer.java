@@ -31,14 +31,14 @@ public class HelloServer {
                     .childHandler(new ChannelInitializer<NioSocketChannel>() {
                         @Override
                         protected void initChannel(NioSocketChannel nioSocketChannel) throws Exception {
-                            // 5、SocketChannel的处理器，使用StringDecoder解码，ByteBuf=>String
                             nioSocketChannel.pipeline().addLast(new LoggingHandler());
+                            // 5、SocketChannel的处理器，使用StringDecoder解码，ByteBuf=>String
                             nioSocketChannel.pipeline().addLast(new StringDecoder());
                             // 6、SocketChannel的业务处理，使用上一个处理器的处理结果
                             nioSocketChannel.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
                                 @Override
                                 protected void channelRead0(ChannelHandlerContext ctx, String s) throws Exception {
-                                    ctx.alloc().buffer();
+                                    //ctx.alloc().buffer();
                                     System.out.println(s);
                                 }
                             });
