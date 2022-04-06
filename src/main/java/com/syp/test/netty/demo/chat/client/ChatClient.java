@@ -33,7 +33,6 @@ public class ChatClient {
 
     private final MessageCodecSharable MESSAGE_CODEC = new MessageCodecSharable();
     private final CountDownLatch WAIT_FOR_LOGIN = new CountDownLatch(1);
-    private static final AtomicBoolean LOGIN = new AtomicBoolean(false);
     private static final AtomicBoolean EXIT = new AtomicBoolean(false);
     private final Scanner scanner = new Scanner(System.in);
 
@@ -69,14 +68,19 @@ public class ChatClient {
                     @Override
                     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
                         log.debug("msg: {}", msg);
+                        //模拟登陆
                         if ((msg instanceof LoginResponseMessage)) {
                             LoginResponseMessage response = (LoginResponseMessage) msg;
                             if (response.isSuccess()) {
-                                // 如果登录成功
-                                LOGIN.set(true);
+                                System.out.println("登陆成功");
+                                // 唤醒 system in 线程
+                                WAIT_FOR_LOGIN.countDown();
+                            }else {
+                                System.out.println("用户名密码错误");
+                                //登陆失败--退出
+                                ctx.channel().close();
                             }
-                            // 唤醒 system in 线程
-                            WAIT_FOR_LOGIN.countDown();
+
                         }
                     }
 
@@ -93,7 +97,6 @@ public class ChatClient {
                     // 在连接断开时触发
                     @Override
                     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-                        //EXIT.set(true);
                         if (EXIT.get()){
                             log.debug("连接已经断开，按任意键退出...");
                         }else {
@@ -109,7 +112,6 @@ public class ChatClient {
                     @Override
                     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
                         log.debug("出现异常，连接已经断开，3s后重连..{}", cause.getMessage());
-                        //EXIT.set(true);
                         ctx.channel().eventLoop().schedule(() -> {
                             doConnect();
                         }, 3L, TimeUnit.SECONDS);
@@ -132,19 +134,12 @@ public class ChatClient {
             }
             // 构造消息对象
             LoginRequestMessage message = new LoginRequestMessage(username, password);
-            System.out.println(message);
             // 发送消息
             ctx.writeAndFlush(message);
-            System.out.println("等待后续操作...");
             try {
                 WAIT_FOR_LOGIN.await();
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
-            // 如果登录失败
-            if (!LOGIN.get()) {
-                ctx.channel().close();
-                return;
             }
             while (true) {
                 System.out.println("==================================");
@@ -175,7 +170,8 @@ public class ChatClient {
                         break;
                     case "gcreate":
                         Set<String> set = new HashSet<>(Arrays.asList(s[2].split(",")));
-                        set.add(username); // 加入自己
+                        // 加入自己
+                        set.add(username);
                         ctx.writeAndFlush(new GroupCreateRequestMessage(s[1], set));
                         break;
                     case "gmembers":
@@ -191,6 +187,9 @@ public class ChatClient {
                         EXIT.set(true);
                         ctx.channel().close();
                         return;
+                    default:
+                        System.out.println("unexpected command:"+ s[0]);
+                        break;
                 }
             }
     }
