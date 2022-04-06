@@ -47,10 +47,10 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
-        int magicNum = in.readInt();
+        int magic = in.readInt();
         byte version = in.readByte();
         byte serializerAlgorithm = in.readByte(); // 0 或 1 或 2
-        byte messageType = in.readByte(); // 0,1,2...
+        byte msgType = in.readByte(); // 0,1,2...
         int sequenceId = in.readInt();
         in.readByte();
         int length = in.readInt();
@@ -60,10 +60,28 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         // 找到反序列化算法
         Serializer.Algorithm algorithm = Serializer.Algorithm.values()[serializerAlgorithm];
         // 序列化具体消息类型
-        Message message = algorithm.deserialize(Message.getMessageClass(messageType), bytes);
+        Message message = algorithm.deserialize(Message.getMessageClass(msgType), bytes);
 //        log.debug("{}, {}, {}, {}, {}, {}", magicNum, version, serializerType, messageType, sequenceId, length);
         //log.debug("{}", message);
-        out.add(message);
+
+        MsgHeader header = new MsgHeader();
+
+        header.setMagic(magic);
+
+        header.setVersion(version);
+
+        header.setSerializerAlgorithm(serializerAlgorithm);
+
+        header.setSequenceId(sequenceId);
+
+        header.setMsgType(msgType);
+
+        header.setMsgLength(length);
+
+        MsgProtocol<Message> msgProtocol = new MsgProtocol<>();
+        msgProtocol.setBody(message);
+        msgProtocol.setHeader(header);
+        out.add(msgProtocol);
     }
 
 }

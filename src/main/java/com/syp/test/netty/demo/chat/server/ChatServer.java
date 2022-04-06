@@ -58,14 +58,15 @@ public class ChatServer {
                                             }
                                         }
                                     })
-                                    .addLast(LOGIN_HANDLER)
+                                    .addLast("server handler",new ServerMessageHandler());
+                                    /*.addLast(LOGIN_HANDLER)
                                     .addLast(CHAT_HANDLER)
                                     .addLast(GROUP_CREATE_HANDLER)
                                     .addLast(GROUP_JOIN_HANDLER)
                                     .addLast(GROUP_MEMBERS_HANDLER)
                                     .addLast(GROUP_QUIT_HANDLER)
                                     .addLast(GROUP_CHAT_HANDLER)
-                                    .addLast(QUIT_HANDLER);
+                                    .addLast(QUIT_HANDLER);*/
                         }
                     });
             Channel channel = serverBootstrap.bind(8080).sync().channel();
