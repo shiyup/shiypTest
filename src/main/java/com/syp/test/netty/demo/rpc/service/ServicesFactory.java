@@ -1,4 +1,4 @@
-package com.syp.test.netty.demo.chat.server.service;
+package com.syp.test.netty.demo.rpc.service;
 
 import com.syp.test.netty.demo.chat.config.Config;
 

@@ -1,6 +1,7 @@
 package com.syp.test.netty.demo.chat.message;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data

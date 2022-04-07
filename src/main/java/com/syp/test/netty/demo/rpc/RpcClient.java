@@ -1,6 +1,6 @@
 package com.syp.test.netty.demo.rpc;
 
-import com.syp.test.netty.demo.chat.message.RpcRequestMessage;
+import com.syp.test.netty.demo.rpc.message.RpcRequestMessage;
 import com.syp.test.netty.demo.chat.protocol.MessageCodecSharable;
 import com.syp.test.netty.demo.chat.protocol.ProtocolFrameDecoder;
 import com.syp.test.netty.demo.rpc.handler.RpcResponseMessageHandler;

@@ -1,17 +1,21 @@
-package com.syp.test.netty.demo.chat.server.handler;
+package com.syp.test.netty.demo.chat.server.handler.bus;
 
 import com.syp.test.netty.demo.chat.message.LoginRequestMessage;
 import com.syp.test.netty.demo.chat.message.LoginResponseMessage;
+import com.syp.test.netty.demo.chat.message.Message;
 import com.syp.test.netty.demo.chat.server.service.UserServiceFactory;
 import com.syp.test.netty.demo.chat.server.session.SessionFactory;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 
-@ChannelHandler.Sharable
-public class LoginRequestMessageHandler extends SimpleChannelInboundHandler<LoginRequestMessage> {
+
+/**
+ * @author shiyuping
+ */
+@MessageType(Message.LoginRequestMessage)
+public class LoginRequestMessageHandler extends AbstractMessageHandler<LoginRequestMessage> {
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, LoginRequestMessage msg) throws Exception {
+    protected void doHandle(ChannelHandlerContext ctx, LoginRequestMessage msg) {
         String username = msg.getUsername();
         String password = msg.getPassword();
         boolean login = UserServiceFactory.getUserService().login(username, password);

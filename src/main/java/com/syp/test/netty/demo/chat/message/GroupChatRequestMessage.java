@@ -1,9 +1,11 @@
 package com.syp.test.netty.demo.chat.message;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
+@NoArgsConstructor
 @ToString(callSuper = true)
 public class GroupChatRequestMessage extends Message {
     private String content;

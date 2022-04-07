@@ -1,11 +1,13 @@
 package com.syp.test.netty.demo.chat.message;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @ToString(callSuper = true)
 public class GroupCreateRequestMessage extends Message {
     private String groupName;

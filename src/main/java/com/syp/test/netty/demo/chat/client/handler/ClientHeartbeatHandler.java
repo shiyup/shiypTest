@@ -1,7 +1,6 @@
-package com.syp.test.netty.demo.chat.server.handler;
+package com.syp.test.netty.demo.chat.client.handler;
 
 import com.syp.test.netty.demo.chat.message.PingMessage;
-import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleState;
@@ -13,6 +12,7 @@ import io.netty.handler.timeout.IdleStateEvent;
  * @Date 2022/4/6 16:08
  */
 public class ClientHeartbeatHandler extends ChannelInboundHandlerAdapter {
+
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         IdleStateEvent event = (IdleStateEvent) evt;

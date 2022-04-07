@@ -1,7 +1,6 @@
 package com.syp.test.netty.demo.chat.protocol;
 
 import com.syp.test.netty.demo.chat.config.Config;
-import com.syp.test.netty.demo.chat.message.LoginRequestMessage;
 import com.syp.test.netty.demo.chat.message.Message;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -9,10 +8,6 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageCodec;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.List;
 
 @Slf4j
@@ -34,7 +29,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
         out.writeByte(msg.getMessageType());
         // 5. 4 个字节
         out.writeInt(msg.getSequenceId());
-        // 无意义，对齐填充
+        // 无意义，对齐填充, 凑满16个字节
         out.writeByte(0xff);
         // 6. 获取内容的字节数组
         byte[] bytes = Config.getSerializerAlgorithm().serialize(msg);
@@ -64,24 +59,7 @@ public class MessageCodecSharable extends MessageToMessageCodec<ByteBuf, Message
 //        log.debug("{}, {}, {}, {}, {}, {}", magicNum, version, serializerType, messageType, sequenceId, length);
         //log.debug("{}", message);
 
-        MsgHeader header = new MsgHeader();
-
-        header.setMagic(magic);
-
-        header.setVersion(version);
-
-        header.setSerializerAlgorithm(serializerAlgorithm);
-
-        header.setSequenceId(sequenceId);
-
-        header.setMsgType(msgType);
-
-        header.setMsgLength(length);
-
-        MsgProtocol<Message> msgProtocol = new MsgProtocol<>();
-        msgProtocol.setBody(message);
-        msgProtocol.setHeader(header);
-        out.add(msgProtocol);
+        out.add(message);
     }
 
 }

@@ -1,17 +1,20 @@
-package com.syp.test.netty.demo.chat.server.handler;
+package com.syp.test.netty.demo.chat.server.handler.bus;
 
 import com.syp.test.netty.demo.chat.message.ChatRequestMessage;
 import com.syp.test.netty.demo.chat.message.ChatResponseMessage;
+import com.syp.test.netty.demo.chat.message.Message;
 import com.syp.test.netty.demo.chat.server.session.SessionFactory;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 
-@ChannelHandler.Sharable
-public class ChatRequestMessageHandler extends SimpleChannelInboundHandler<ChatRequestMessage> {
+/**
+ * @author shiyuping
+ */
+@MessageType(Message.ChatRequestMessage)
+public class ChatRequestMessageHandler extends AbstractMessageHandler<ChatRequestMessage> {
+
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, ChatRequestMessage msg) throws Exception {
+    protected void doHandle(ChannelHandlerContext ctx, ChatRequestMessage msg) {
         String to = msg.getTo();
         Channel channel = SessionFactory.getSession().getChannel(to);
         // 在线

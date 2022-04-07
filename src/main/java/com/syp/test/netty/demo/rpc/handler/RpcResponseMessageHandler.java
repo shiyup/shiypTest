@@ -1,7 +1,7 @@
 package com.syp.test.netty.demo.rpc.handler;
 
 
-import com.syp.test.netty.demo.chat.message.RpcResponseMessage;
+import com.syp.test.netty.demo.rpc.message.RpcResponseMessage;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

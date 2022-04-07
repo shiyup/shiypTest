@@ -1,9 +1,9 @@
 package com.syp.test.netty.demo.rpc.handler;
 
-import com.syp.test.netty.demo.chat.message.RpcRequestMessage;
-import com.syp.test.netty.demo.chat.message.RpcResponseMessage;
+import com.syp.test.netty.demo.rpc.message.RpcRequestMessage;
+import com.syp.test.netty.demo.rpc.message.RpcResponseMessage;
 import com.syp.test.netty.demo.rpc.service.HelloService;
-import com.syp.test.netty.demo.chat.server.service.ServicesFactory;
+import com.syp.test.netty.demo.rpc.service.ServicesFactory;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

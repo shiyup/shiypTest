@@ -1,5 +1,7 @@
 package com.syp.test.netty.demo.chat.message;
 
+import com.syp.test.netty.demo.rpc.message.RpcRequestMessage;
+import com.syp.test.netty.demo.rpc.message.RpcResponseMessage;
 import lombok.Data;
 
 import java.io.Serializable;

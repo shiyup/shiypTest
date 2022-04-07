@@ -1,4 +1,4 @@
-package com.syp.test.netty.demo.chat.protocol;
+package com.syp.test.netty.demo.rpc;
 
 import lombok.Data;
 
