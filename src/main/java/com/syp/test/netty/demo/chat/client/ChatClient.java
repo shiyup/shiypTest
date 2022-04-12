@@ -63,7 +63,7 @@ public class ChatClient {
                 ch.pipeline().addLast(messageCodec);
                 // 用来判断是不是 读空闲时间过长，或 写空闲时间过长
                 // 3s 内如果没有向服务器写数据，会触发一个 IdleState#WRITER_IDLE 事件
-                //ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
+                ch.pipeline().addLast(new IdleStateHandler(0, 3, 0));
                 // 客户端心跳处理-每隔3s发送一个心跳包
                 ch.pipeline().addLast(new ClientHeartbeatHandler());
                 ch.pipeline().addLast("clientHandler", new ChannelInboundHandlerAdapter() {

@@ -37,9 +37,9 @@ public class ChatServer {
                                     .addLast(messageCodec)
                                     // 用来判断是不是 读空闲时间过长，或 写空闲时间过长
                                     // 5s 内如果没有收到 channel 的数据，会触发一个 IdleState#READER_IDLE 事件
-                                    //.addLast(new IdleStateHandler(5, 0, 0))
+                                    .addLast(new IdleStateHandler(5, 0, 0))
                                     // 服务端心跳处理-触发了读空闲事件就关闭channel
-                                    //.addLast(new ServerHeartbeatHandler())
+                                    .addLast(new ServerHeartbeatHandler())
                                     .addLast("serverHandler",serverMessageHandler);
                         }
                     });
