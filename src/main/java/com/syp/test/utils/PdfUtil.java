@@ -10,6 +10,8 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -26,12 +28,15 @@ public class PdfUtil {
 
     static String pptx_path = "D:\\shiyuping\\testpptx.pptx";
 
-    static String pdf_path = "D:\\shiyuping\\pdf\\pptx.pdf";
+    static String pdf_path = "D:\\shiyuping\\pdf\\testpdf.pdf";
+
+    private static final String PPT_URL = "https://xlian-oss-public.oss-cn-hangzhou.aliyuncs.com/dev/test.pptx";
 
     public static void main(String[] args) {
-         pptToPdf(ppt_path);
+        //pptToPdf(ppt_path);
         //docToPdf(word_path);
         //excelToPdf(excel_path);
+        pptToPdfForRemoteUrl(PPT_URL);
     }
 
     public static File Pdf(ArrayList<String> imageUrllist, String mOutputPdfFileName) {
@@ -285,6 +290,43 @@ public class PdfUtil {
             long now = System.currentTimeMillis();
             System.out.println("共耗时：" + ((now - old) / 1000.0) + "秒\n\n" + "文件保存在:" + file.getPath()); //转化过程耗时
             return pdfPathString;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "PDF格式转化失败";
+    }
+
+    /**
+     *  根据远程url地址转换pdf
+     * @param filePath 远程地址
+     * @return
+     */
+    public static String pptToPdfForRemoteUrl(String filePath) {
+        // 验证License
+        if (!getLicense2()) {
+            return "PDF格式转化失败";
+        }
+        try {
+            long old = System.currentTimeMillis();
+            URL url = new URL(filePath);
+            //获取链接
+            HttpURLConnection uc = (HttpURLConnection) url.openConnection();
+            uc.setDoInput(true);//设置是否要从 URL 连接读取数据,默认为true
+            uc.connect();
+            InputStream inputStream = uc.getInputStream();
+            //文件操作
+            // 新建一个空白pdf文档
+            File file = new File(pdf_path);
+            //输入pdf路径
+            com.aspose.slides.Presentation pres = new com.aspose.slides.Presentation(inputStream);
+
+            FileOutputStream fileOS = new FileOutputStream(file);
+            pres.save(fileOS, com.aspose.slides.SaveFormat.Pdf);
+            fileOS.close();
+
+            long now = System.currentTimeMillis();
+            System.out.println("共耗时：" + ((now - old) / 1000.0) + "秒\n\n" + "文件保存在:" + file.getPath()); //转化过程耗时
+            return "";
         } catch (Exception e) {
             e.printStackTrace();
         }
