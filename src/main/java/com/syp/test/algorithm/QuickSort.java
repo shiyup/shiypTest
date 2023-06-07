@@ -1,4 +1,4 @@
-package com.syp.test;
+package com.syp.test.algorithm;
 
 import java.util.Arrays;
 
