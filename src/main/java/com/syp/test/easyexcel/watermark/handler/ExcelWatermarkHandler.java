@@ -1,5 +1,6 @@
 package com.syp.test.easyexcel.watermark.handler;
 
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.write.handler.CellWriteHandler;
@@ -8,24 +9,22 @@ import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
+import com.syp.test.utils.AESUtil;
 import com.syp.test.easyexcel.util.TextBlindWatermarkUtil;
 import com.syp.test.easyexcel.watermark.constant.WatermarkParam;
 import com.syp.test.easyexcel.watermark.content.CommonWatermarkContent;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.openxml4j.opc.PackageRelationship;
 import org.apache.poi.openxml4j.opc.TargetMode;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.util.CellRangeAddressList;
-import org.apache.poi.ss.util.CellUtil;
-import org.apache.poi.xssf.usermodel.XSSFRelation;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.*;
+import org.openxmlformats.schemas.drawingml.x2006.main.CTTextCharacterProperties;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.font.FontRenderContext;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -50,10 +49,32 @@ import java.util.List;
  */
 
 @Slf4j
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler, CellWriteHandler {
 
+    /**
+     * 水印内容
+     */
     private final String watermarkContent;
+
+    /**
+     * 写入数据多少
+     */
+    private final int dataSize;
+
+    /**
+     * 随机行数
+     */
+    private final int randomRow;
+
+    public ExcelWatermarkHandler(String watermarkContent, int dataSize) {
+        this.watermarkContent = AESUtil.encrypt(watermarkContent);
+        this.dataSize = dataSize;
+        //从数据行的第二行开始
+        this.randomRow = RandomUtil.randomInt(2, dataSize);
+    }
+
+
 
     /**
      * 根据用户姓名，工号，创建日期信息生成水印图片
@@ -96,6 +117,9 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
         graphics2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER));
 
         graphics2d.dispose();
+        // 读取图像
+        //BufferedImage waterMarkImage = ImageIO.read(new File("/Users/mac/Downloads/头像加水印_java.png"));
+
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(waterMarkImage, WatermarkParam.format, byteArrayOutputStream);
         return byteArrayOutputStream;
@@ -144,14 +168,61 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
             //显示水印
             putWatermarkToExcel(sheet, watermark.toByteArray());
 
-
-        } catch(Exception e) {
+            //addTextBox(sheet);
+            } catch(Exception e) {
             log.error("[ExcelWatermarkHandler] afterSheetCreate()",e);
         } finally {
             if(watermark != null) {
                 watermark.close();
             }
         }
+    }
+
+    private void addTextBox(XSSFSheet sheet) {
+        //插入文本框
+        //列开始值
+        int colStart = 5;
+        //创建画布
+        XSSFDrawing draw = sheet.createDrawingPatriarch();
+        //创建锚点（0，0，0，0，col1, row1, col2, row2）
+        /*创建一个新的客户端锚，并设置左上角和右下角
+         *通过单元格引用和偏移量锚定的坐标。
+         * @param dx1第一个单元格内的x坐标。
+         * @param dy1第一个单元格内的y坐标。
+         * @param dx2第二个单元格内的x坐标。
+         * @param dy2第二个单元格内的y坐标。
+         * @param col1第一个单元格的列（从0开始）。
+         * @param row1第一个单元格的行（从0开始）。
+         * @param col2第二个单元格的列（从0开始）。
+         * @param row2第二个单元格的行（从0开始）。
+         */
+        XSSFClientAnchor createAnchor = draw.createAnchor(0, 0, 0, 0, colStart, 11, colStart + 6, 11+7);
+        //创建文本框
+        XSSFTextBox tb1 = draw.createTextbox(createAnchor);
+        //设置透明度
+        // 设置透明背景色
+
+        //设置边框颜色，黑色
+        tb1.setLineStyleColor(0, 0, 0);
+        //设置边框宽度
+        //tb1.setLineWidth(2);
+
+        //设置填充色，白色
+        Color col = Color.white;
+        tb1.setFillColor(col.getRed(), col.getGreen(), col.getBlue());
+        //富文本字符串
+        XSSFRichTextString address = new XSSFRichTextString("测试");
+        tb1.setText(address);
+        //文字字符属性
+        CTTextCharacterProperties rpr = tb1.getCTShape().getTxBody().getPArray(0).getRArray(0).getRPr();
+        //设置字体
+        rpr.addNewLatin().setTypeface("Trebuchet MS");
+        //设置字体透明度
+        //设置字体大小9pt
+        rpr.setSz(900);
+        //设置字体颜色，蓝色
+        col = Color.BLACK;
+        rpr.addNewSolidFill().addNewSrgbClr().setVal(new byte[]{(byte)col.getRed(),(byte)col.getGreen(),(byte)col.getBlue()});
     }
 
     @Override
@@ -163,26 +234,40 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
         }
         //嵌入隐水印
         String cellValue = cell.getStringCellValue();
-        cell.setCellValue(TextBlindWatermarkUtil.embed(cellValue, watermarkContent));
+        cell.setCellValue(TextBlindWatermarkUtil.embed(cellValue, "12345678"));
     }
 
     @Override
     public void afterRowDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder, Row row,
                          Integer relativeRowIndex, Boolean isHead) {
-        //是否是表头
-        if (!isHead){
+        if (isHead){
             return;
         }
-        //表头后到空白格中插入一个单元格
-        Cell cell = CellUtil.getCell(row, row.getLastCellNum() + 100);
-        cell.setCellValue("这里是水印");
-        Workbook workbook = writeSheetHolder.getSheet().getWorkbook();
+        //relativeRowIndex从0开始算
+        //某个数据行后往后两列写入(除第一行数据列)
+        if (relativeRowIndex + 1 == randomRow){
+            Cell newCell = row.createCell(row.getLastCellNum() + 1);
+            addWatermarkToExcel(newCell, writeSheetHolder.getSheet());
+        }
+        //最后一行数据往后两行某列写入
+        if (relativeRowIndex + 1 == dataSize){
+            //最后一行数据填写完成后再下面生成一条新行，插入水印
+            Row newRow = writeSheetHolder.getSheet().createRow(row.getRowNum() + 2);
+            //从第2列到最后一列之间选择单元格插入水印
+            Cell newCell = newRow.createCell(RandomUtil.randomInt(1, row.getLastCellNum()));
+            addWatermarkToExcel(newCell, writeSheetHolder.getSheet());
+        }
+
+
+    }
+
+    private void addWatermarkToExcel(Cell newCell, Sheet sheet) {
+        newCell.setCellValue(TextBlindWatermarkUtil.getWm("12345678"));
+        Workbook workbook = sheet.getWorkbook();
         CellStyle cellStyle = workbook.createCellStyle();
         Font font = workbook.createFont();
         font.setColor(IndexedColors.WHITE.getIndex());
-        //设置字体颜色为单元格背景颜色
         cellStyle.setFont(font);
-        cell.setCellStyle(cellStyle);
-
+        newCell.setCellStyle(cellStyle);
     }
 }

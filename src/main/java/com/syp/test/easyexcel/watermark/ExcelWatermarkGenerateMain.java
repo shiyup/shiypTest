@@ -1,14 +1,14 @@
 package com.syp.test.easyexcel.watermark;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.unit.DataUnit;
 import com.syp.test.easyexcel.model.ExcelDataEntity;
 import com.syp.test.easyexcel.util.ExcelWriterWithEasyExcel;
 import com.syp.test.easyexcel.util.ExcelWriterWithPOI;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @ClassName ExcelWatermarkGenerateMain
@@ -18,13 +18,10 @@ import com.syp.test.easyexcel.util.ExcelWriterWithPOI;
  **/
 public class ExcelWatermarkGenerateMain {
     public static void main(String[] args) throws Exception {
-        ExcelWriterWithEasyExcel.WriteExcelWithEasyExcel("/Users/mac/Downloads/easyExcel_watermark.xlsx",
-                "景天 0033 " + DateUtil.formatDate(new Date()),
+        ExcelWriterWithEasyExcel.WriteExcelWithEasyExcel("/Users/mac/Downloads/easyExcel_watermark_test_str.xlsx",
+                "12345678",
                 ExcelDataEntity.class,
                 generateData());
-//        ExcelWriterWithPOI.WriteExcelWithPOI("/Users/mac/Downloads/test_watermark2.xlsx",
-//                "景天 0033 " + DateUtil.formatDate(new Date()),
-//                generateData());
     }
 
 

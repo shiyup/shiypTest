@@ -8,9 +8,10 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * @author wangyw
- * @date 2021/11/5
- */
+ * @ClassName ExcelWriterWithEasyExcel
+ * @Description 利用EasyExcel写Excel文件
+ * @Version 1.0
+ **/
 public class ExcelWriterWithEasyExcel {
 
     /**
@@ -26,7 +27,10 @@ public class ExcelWriterWithEasyExcel {
         FileOutputStream excelWriteStream = new FileOutputStream(excelPathName);
         EasyExcel.write(excelPathName, clazz)
                 .inMemory(true)
-                .registerWriteHandler(new ExcelWatermarkHandler(content))
+                .registerWriteHandler(new ExcelWatermarkHandler(content, dataList.size()))
+                //自适应列宽
+                //.registerWriteHandler(new CustomLongestMatchColumnWidthStyleStrategy())
+                //设置sheet名称
                 .sheet("Sheet1").doWrite(dataList);
         excelWriteStream.flush();
         excelWriteStream.close();

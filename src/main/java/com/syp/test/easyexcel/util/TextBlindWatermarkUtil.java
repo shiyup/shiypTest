@@ -13,11 +13,12 @@ import java.util.*;
 
 public class TextBlindWatermarkUtil {
 
-    private final List<String> allChrWmHex = Arrays.asList("1d", "7F", "200B", "200C", "200D", "FEFF");
+    private final List<String> allChrWmHex = Arrays.asList("200B", "200C", "200D", "FEFF", "200E", "200F");
 
-    private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200B', "1", '\uFEFF');
+    //private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200E', "1", '\u200F');
     //private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200A', "1", '\u2009');
-    private final static Map<Character, String> char2bitDict = ImmutableMap.of('\u200B', "0", '\uFEFF', "1");
+    private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200B', "1", '\uFEFF');
+    private final static Map<Character, String> char2bitDict = ImmutableMap.of('\u200E', "0", '\u200F', "1");
 
 
     public static String getWm(String watermark) {
@@ -64,6 +65,9 @@ public class TextBlindWatermarkUtil {
 
         for (int idx = 0; idx < textEmbed.length(); idx++) {
             char c = textEmbed.charAt(idx);
+            //转为16进制编码
+            //String hex = Integer.toHexString(c);
+            //System.out.println(hex);
             if (char2bitDict.containsKey(c)) {
                 if (idxLeft == -1) {
                     idxLeft = idx;
@@ -76,12 +80,12 @@ public class TextBlindWatermarkUtil {
             }
         }
 
-        if (idxLeft == -1) {
+        if (idxRight == -1) {
             idxRight = textEmbed.length();
         }
-
-        if (idxLeft == -1 || idxRight == -1) {
-            throw new RuntimeException("There is no watermark!");
+        if (idxLeft == -1) {
+            //无水印
+            return "";
         }
 
         StringBuilder wmExtractBin = new StringBuilder();
@@ -129,7 +133,7 @@ public class TextBlindWatermarkUtil {
 
     public static void main(String[] args) {
         String originalText = "The text to watermark";
-        String watermark = "景天 0033 ";
+        String watermark = "123456";
 
         try {
             String embeddedText = embed(originalText, watermark);

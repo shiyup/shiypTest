@@ -1,5 +1,9 @@
 package com.syp.test.easyexcel.watermark;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.AES;
+
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -10,24 +14,23 @@ import java.nio.charset.StandardCharsets;
 public class ExcelWatermarkGenerateMain2 {
 
     public static void main(String[] args) {
-       String str = "景天";
+        String str = "12345678";
+        //密钥
+        String key = RandomUtil.randomString(16);
+        System.out.println(key);
 
-       //零宽字符的编码
-        String zeroWidthStr = "";
+        AES aes = SecureUtil.aes(key.getBytes(StandardCharsets.UTF_8));
+        System.out.println(aes.encryptHex(str));
 
-       //将字符转为unicode编码
-        String unicodeStr = "";
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            String unicode = Integer.toHexString(c);
-            unicodeStr += "\\u" + unicode;
-        }
+        AES aes2 = SecureUtil.aes(key.getBytes(StandardCharsets.UTF_8));
+        System.out.println(aes2.decryptStr(aes.encryptHex(str)));
+
         //将字符串转换为8位二进制
-        String binaryStr = convertBytesToBinary(str.getBytes(StandardCharsets.UTF_8));
-        System.out.println(binaryStr);
-        //二进制数据转换为字节数字
-        byte[] bytes = convertBinaryToBytes(binaryStr);
-        System.out.println(new String(bytes, StandardCharsets.UTF_8));
+        //String binaryStr = convertBytesToBinary(str.getBytes(StandardCharsets.UTF_8));
+        //System.out.println(binaryStr);
+        //二进制数据转换为字节数组
+        //byte[] bytes = convertBinaryToBytes(binaryStr);
+        //System.out.println(new String(bytes, StandardCharsets.UTF_8));
 
     }
 
@@ -72,7 +75,6 @@ public class ExcelWatermarkGenerateMain2 {
         }
         return binaryStr;
     }
-
 
 
 }

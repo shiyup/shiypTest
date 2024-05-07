@@ -20,7 +20,7 @@ public final class WatermarkParam {
     /**
      * 水印颜色，不透明度
      */
-    public final static Color color = new Color(0,0,0,20);
+    public final static Color color = new Color(0,0,0,1);
 
     /**
      * 水印线宽
