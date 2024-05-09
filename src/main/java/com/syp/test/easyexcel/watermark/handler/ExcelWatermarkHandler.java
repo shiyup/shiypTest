@@ -68,7 +68,7 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
     private final int randomRow;
 
     public ExcelWatermarkHandler(String watermarkContent, int dataSize) {
-        this.watermarkContent = AESUtil.encrypt(watermarkContent);
+        this.watermarkContent = watermarkContent;
         this.dataSize = dataSize;
         //从数据行的第二行开始
         this.randomRow = RandomUtil.randomInt(2, dataSize);

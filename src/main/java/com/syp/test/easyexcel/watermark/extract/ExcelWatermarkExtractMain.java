@@ -7,6 +7,7 @@ import com.alibaba.excel.event.AnalysisEventListener;
 import com.syp.test.easyexcel.model.ExcelDataEntity;
 import com.syp.test.easyexcel.util.TextBlindWatermarkUtil;
 
+import java.io.File;
 import java.util.Map;
 
 /**
@@ -18,9 +19,9 @@ public class ExcelWatermarkExtractMain {
 
     public static void main(String[] args) {
         // Excel 文件路径
-        String fileName = "/Users/mac/Downloads/easyExcel_watermark_test_str.xlsx";
-
-
-
+        String fileName = "/Users/mac/Downloads/easyExcel_watermark_test_str2.xlsx";
+        File file = new File(fileName);
+        ExcelWatermarkExtractHandler extractHandler = new ExcelWatermarkExtractHandler();
+        extractHandler.extract(file);
     }
 }

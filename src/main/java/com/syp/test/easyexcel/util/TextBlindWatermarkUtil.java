@@ -13,24 +13,17 @@ import java.util.*;
 
 public class TextBlindWatermarkUtil {
 
-    private final List<String> allChrWmHex = Arrays.asList("200B", "200C", "200D", "FEFF", "200E", "200F");
+    private final List<String> allChrWmHex = Arrays.asList("202C", "202D", "200B", "200C", "200D", "FEFF", "200E", "200F");
 
     //private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200E', "1", '\u200F');
     //private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200A', "1", '\u2009');
-    private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u200B', "1", '\uFEFF');
-    private final static Map<Character, String> char2bitDict = ImmutableMap.of('\u200E', "0", '\u200F', "1");
+    private final static Map<String, Character> bit2charDict = ImmutableMap.of("0", '\u202C', "1", '\u202D');
+    private final static Map<Character, String> char2bitDict = ImmutableMap.of('\u202C', "0", '\u202D', "1");
 
 
     public static String getWm(String watermark) {
         byte[] watermarkBytes = watermark.getBytes();
         StringBuilder wmBin = new StringBuilder();
-
-        // 将明文转换成8位二进制数
-//        for (byte b : watermarkBytes) {
-//            int xorValue = b ^ random.nextInt();
-//            String binaryString = Integer.toBinaryString(xorValue & 0xFF);
-//            wmBin.append(String.format("%8s", binaryString).replace(' ', '0'));
-//        }
         for (byte b : watermarkBytes) {
             // 将字节转换为一个8位的二进制字符串，并去掉前导零
             String binaryString = Integer.toBinaryString(0xFF & b);
@@ -53,11 +46,11 @@ public class TextBlindWatermarkUtil {
         String textWithoutWatermark = removeWatermark(text);
         String wm = getWm(watermark);
         //随机切割文本，中间加入水印
-        //int idx = new Random().nextInt(text.length());
-        //System.out.println(idx);
-        //return textWithoutWatermark.substring(0, idx) + wm + textWithoutWatermark.substring(idx);
+        int idx = new Random().nextInt(text.length());
+        System.out.println(idx);
+        return textWithoutWatermark.substring(0, idx) + wm + textWithoutWatermark.substring(idx);
         //加入到最后
-        return textWithoutWatermark + wm;
+        //return textWithoutWatermark + wm;
     }
 
     public static String extract(String textEmbed){

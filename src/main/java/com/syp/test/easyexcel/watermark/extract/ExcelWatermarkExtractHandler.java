@@ -23,31 +23,11 @@ public class ExcelWatermarkExtractHandler extends AbstractWatermarkExtractHandle
 
     @Override
     public String extract(File file) {
-        String watermark = "";
-        EasyExcel.read(file, new AnalysisEventListener<Map<Integer, String>>() {
-                    @Override
-                    public void invoke(Map<Integer, String> data, AnalysisContext context) {
-                        int rouNumber = context.readRowHolder().getRowIndex() + 1;
-                        System.out.println("第"+ rouNumber+ "行，数据: " + data);
-                    }
-                    @Override
-                    public void doAfterAllAnalysed(AnalysisContext context) {
-                    }
-                    @Override
-                    public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-                        log.info("表头信息: {}", headMap);
-                        for (Integer integer : headMap.keySet()) {
-                            String head = headMap.get(integer);
-                            log.info("提取表头: {}", head);
-                            String extract = TextBlindWatermarkUtil.extract(head);
-                            log.info("表头提取到到水印: {}", extract);
-                            return;
-                        }
-                    }
-                })
+        ExcelWatermarkReadListener readListener = new ExcelWatermarkReadListener();
+        EasyExcel.read(file, readListener)
                 .sheet()
                 .doRead();
-        return watermark;
+        return readListener.getWatermark();
     }
 
     @Override

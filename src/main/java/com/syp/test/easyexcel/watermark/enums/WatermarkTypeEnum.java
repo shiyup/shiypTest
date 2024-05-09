@@ -1,5 +1,6 @@
 package com.syp.test.easyexcel.watermark.enums;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,7 +33,7 @@ public enum WatermarkTypeEnum {
 
     public static WatermarkTypeEnum getBySuffix(String suffix){
         return ListUtil.of(values()).stream()
-                .filter(watermarkTypeEnum -> watermarkTypeEnum.getSuffixList().contains(suffix))
+                .filter(e -> CollUtil.isNotEmpty(e.getSuffixList()) && e.getSuffixList().contains(suffix))
                 .findFirst().orElse(OTHER);
     }
 }
