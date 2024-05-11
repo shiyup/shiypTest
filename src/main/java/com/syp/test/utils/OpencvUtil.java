@@ -27,7 +27,7 @@ public class OpencvUtil {
     }
 
     public static void main(String[] args) {
-        light("/Users/mac/Downloads/screenshot-20240507-144920.png", "/Users/mac/Downloads/screenshot-20240507-调整.png");
+        light("/Users/mac/Downloads/screenshot-20240507-144920.png", "/Users/mac/Downloads/screenshot-20240507-调整2.png");
     }
 
     /**

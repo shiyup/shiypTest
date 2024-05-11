@@ -193,6 +193,11 @@
             <!--python版本在这里指定（2.x或3.x等）-->
             <version>2.7.2</version>
         </dependency>
+        <dependency>
+            <groupId>com.hankcs</groupId>
+            <artifactId>hanlp</artifactId>
+            <version>portable-1.6.8</version>
+        </dependency>
         <!--导入jar-->
         <dependency>
             <groupId>com.aspose</groupId>
@@ -218,13 +223,13 @@
             <systemPath>${project.basedir}/lib/aspose-words-18.6-jdk16.jar</systemPath>
         </dependency>
         <!--跨平台计算机视觉和机器学习软件库-->
-        <dependency>
-            <groupId>org.opencv</groupId>
-            <artifactId>opencv</artifactId>
-            <version>4.5.5</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/opencv-455.jar</systemPath>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.opencv</groupId>-->
+<!--            <artifactId>opencv</artifactId>-->
+<!--            <version>4.5.5</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>${project.basedir}/lib/opencv-455.jar</systemPath>-->
+<!--        </dependency>-->
     </dependencies>
 
     <build>
