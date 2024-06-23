@@ -24,7 +24,7 @@ public class ExcelWriterWithEasyExcel {
      * @throws IOException
      */
     public static void WriteExcelWithEasyExcel(String excelPathName, String content,Class<?> clazz, List<?> dataList) throws IOException {
-        FileOutputStream excelWriteStream = new FileOutputStream(excelPathName);
+        //FileOutputStream excelWriteStream = new FileOutputStream(excelPathName);
         EasyExcel.write(excelPathName, clazz)
                 .inMemory(true)
                 .registerWriteHandler(new ExcelWatermarkHandler(content, dataList.size()))
@@ -32,7 +32,7 @@ public class ExcelWriterWithEasyExcel {
                 //.registerWriteHandler(new CustomLongestMatchColumnWidthStyleStrategy())
                 //设置sheet名称
                 .sheet("Sheet1").doWrite(dataList);
-        excelWriteStream.flush();
-        excelWriteStream.close();
+        //excelWriteStream.flush();
+        //excelWriteStream.close();
     }
 }

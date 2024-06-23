@@ -16,8 +16,8 @@ import java.util.List;
  **/
 public class ExcelWatermarkGenerateMain {
     public static void main(String[] args) throws Exception {
-        ExcelWriterWithEasyExcel.WriteExcelWithEasyExcel("/Users/mac/Downloads/easyExcel_watermark_test_str2.xlsx",
-                "12345678",
+        ExcelWriterWithEasyExcel.WriteExcelWithEasyExcel("/Users/mac/Downloads/Excel暗水印生成38.xlsx",
+                "rx4ma0",
                 ExcelDataEntity.class,
                 generateData());
     }

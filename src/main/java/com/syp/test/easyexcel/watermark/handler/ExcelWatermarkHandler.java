@@ -9,7 +9,6 @@ import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
-import com.syp.test.utils.AESUtil;
 import com.syp.test.easyexcel.util.TextBlindWatermarkUtil;
 import com.syp.test.easyexcel.watermark.constant.WatermarkParam;
 import com.syp.test.easyexcel.watermark.content.CommonWatermarkContent;
@@ -102,7 +101,7 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
         graphics2d.dispose();
         graphics2d = waterMarkImage.createGraphics();
         graphics2d.setColor(WatermarkParam.color);
-        graphics2d.setStroke(new BasicStroke(1));
+        graphics2d.setStroke(WatermarkParam.stroke);
         graphics2d.setFont(WatermarkParam.font);
         graphics2d.rotate(WatermarkParam.theta, (double) waterMarkImage.getWidth() / 2, (double) waterMarkImage.getHeight() / 2);
         FontRenderContext context = graphics2d.getFontRenderContext();
@@ -118,7 +117,7 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
 
         graphics2d.dispose();
         // 读取图像
-        //BufferedImage waterMarkImage = ImageIO.read(new File("/Users/mac/Downloads/头像加水印_java.png"));
+        //BufferedImage waterMarkImage = ImageIO.read(new File("/Users/mac/Downloads/头像暗水印50.png"));
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ImageIO.write(waterMarkImage, WatermarkParam.format, byteArrayOutputStream);
@@ -234,7 +233,7 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
         }
         //嵌入隐水印
         String cellValue = cell.getStringCellValue();
-        cell.setCellValue(TextBlindWatermarkUtil.embed(cellValue, "12345678"));
+        cell.setCellValue(TextBlindWatermarkUtil.embed(cellValue, "lm6pqw"));
     }
 
     @Override
@@ -262,7 +261,8 @@ public class ExcelWatermarkHandler implements SheetWriteHandler, RowWriteHandler
     }
 
     private void addWatermarkToExcel(Cell newCell, Sheet sheet) {
-        newCell.setCellValue(TextBlindWatermarkUtil.getWm("12345678"));
+        newCell.setCellValue(TextBlindWatermarkUtil.getWm( "lm6pqw"));
+        newCell.setCellType(CellType.STRING);
         Workbook workbook = sheet.getWorkbook();
         CellStyle cellStyle = workbook.createCellStyle();
         Font font = workbook.createFont();

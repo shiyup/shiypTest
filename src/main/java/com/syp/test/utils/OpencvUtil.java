@@ -15,7 +15,6 @@ import java.io.IOException;
 
 /**
  * Created by shiyuping on 2024/5/8 18:05
- * @See <a href="https://www.jianshu.com/p/0cdce2d0306f">...</a>
  *
  * @author shiyuping
  */
@@ -27,7 +26,8 @@ public class OpencvUtil {
     }
 
     public static void main(String[] args) {
-        light("/Users/mac/Downloads/screenshot-20240507-144920.png", "/Users/mac/Downloads/screenshot-20240507-调整2.png");
+        //light("/Users/mac/Downloads/网页截图隐水印.png", "/Users/mac/Downloads/网页截图-水印还原2.png");
+        light("/Users/mac/Downloads/excel截图6.png", "/Users/mac/Downloads/Excel截图6-还原.png");
     }
 
     /**
@@ -41,7 +41,7 @@ public class OpencvUtil {
         byte[] lookUpTableData = new byte[(int) (lookUpTable.total()*lookUpTable.channels())];
         for (int i = 0; i < lookUpTable.cols(); i++) {
             //调整伽马值130.0
-            lookUpTableData[i] = saturate(Math.pow(i / 255.0, 130.0) * 255.0);
+            lookUpTableData[i] = saturate(Math.pow(i / 255.0, 160.0) * 255.0);
         }
 
         lookUpTable.put(0, 0, lookUpTableData);

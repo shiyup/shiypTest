@@ -5,7 +5,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 /**
- * 基于图片的暗水印
+ * 基于图片的暗水印（原图颜色有修改）
  * 原理
  * Encode:
  * 原图 --- 傅立叶变换 ---> 频域图 + 水印 --- 逆变换 ---> 带水印图
@@ -21,15 +21,14 @@ public class BlindWaterMark {
     private static boolean text = true;
 
     public static void main(String[] args) {
-        BlindWaterMark bwm = new BlindWaterMark();
         //编码
-        //bwm.encode("/Users/mac/Downloads/暗水印.png", "123456789", "/Users/mac/Downloads/image_watermark.png");
+        encode("/Users/mac/Downloads/头像.png", "12345678", "/Users/mac/Downloads/头像暗水印110.png");
         //解码
-        bwm.decode("/Users/mac/Downloads/暗水印截图.png", "/Users/mac/Downloads/image_watermark4.png");
+        //decode("/Users/mac/Downloads/50.png", "/Users/mac/Downloads/头像暗水印50_提取.png");
 
     }
 
-    private void encode(String image, String watermark, String output) {
+    private static void encode(String image, String watermark, String output) {
 
         //load image
         Mat srcImg = imread(image, CV_LOAD_IMAGE_COLOR);
@@ -45,12 +44,14 @@ public class BlindWaterMark {
         MatVector[] planes = { new MatVector(2), new MatVector(2), new MatVector(2)};
         for(int i = 0; i < color.size() ; i++) {
             color.get(i).convertTo(color.get(i), CV_32F);
+            //傅立叶变换
             Mat comImg = startDFT(color.get(i));
             if(text) {
                 addTextWaterMark(comImg, watermark);
             } else {
                 addImageWaterMark(comImg, watermark);
             }
+            //傅立叶逆变换
             inverseDFT(comImg, planes[i]);
             newPlanes.put(i, comImg);
         }
@@ -194,18 +195,16 @@ public class BlindWaterMark {
      *              频谱图
      */
     private static void addTextWaterMark(Mat comImg, String watermark) {
-
         Scalar s = new Scalar(0x00, 0);
+        //Scalar s = new Scalar(255 * 300.0, 255 * 300.0, 255 * 300.0, 255 * 300.0);
         Point p = new Point(comImg.size().width() / 3, comImg.size().height() / 3);
 
         // add text
-        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,
-                20, false);
-        // 旋转图片
+        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3, 20, false);
+        // 旋转图片--水平和垂直翻转
         flip(comImg, comImg, -1);
 
-        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,
-                20, false);
+        putText(comImg, watermark, p, CV_FONT_HERSHEY_COMPLEX, 1.5, s, 3,20, false);
         flip(comImg, comImg, -1);
     }
 

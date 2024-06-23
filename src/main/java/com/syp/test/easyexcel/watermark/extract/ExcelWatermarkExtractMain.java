@@ -19,9 +19,12 @@ public class ExcelWatermarkExtractMain {
 
     public static void main(String[] args) {
         // Excel 文件路径
-        String fileName = "/Users/mac/Downloads/easyExcel_watermark_test_str2.xlsx";
-        File file = new File(fileName);
-        ExcelWatermarkExtractHandler extractHandler = new ExcelWatermarkExtractHandler();
-        extractHandler.extract(file);
+        String ExcelFileName = "/Users/mac/Downloads/客户-集团-演示3501776972074328912.xlsx";
+        // 图片路径
+        String pictureFileName = "/Users/mac/Downloads/Excel截图.png";
+        AbstractWatermarkExtractHandler extractHandler = new ExcelWatermarkExtractHandler();
+        //AbstractWatermarkExtractHandler extractHandler = new PictureWatermarkExtractHandler();
+        String extract = extractHandler.extract(new File(ExcelFileName));
+        System.out.println(extract);
     }
 }

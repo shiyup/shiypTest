@@ -22,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+        <jsqlparser.version>4.6</jsqlparser.version>
     </properties>
 
     <dependencies>
@@ -181,11 +182,15 @@
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>opencv</artifactId>
             <version>3.4.2-1.4.2</version>
+            <classifier>macosx-x86_64</classifier>
         </dependency>
         <dependency>
             <groupId>org.bytedeco.javacpp-presets</groupId>
             <artifactId>opencv-platform</artifactId>
             <version>3.4.2-1.4.2</version>
+            <classifier>macosx-x86_64</classifier>
+            <!--  <classifier>windows-x86_64</classifier>-->
+            <!--  <classifier>linux-x86_64</classifier>-->
         </dependency>
         <dependency>
             <groupId>org.python</groupId>
@@ -197,6 +202,18 @@
             <groupId>com.hankcs</groupId>
             <artifactId>hanlp</artifactId>
             <version>portable-1.6.8</version>
+        </dependency>
+        <!--sql解析工具-->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>${jsqlparser.version}</version>
+        </dependency>
+        <!--shardingsphere-->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc-core</artifactId>
+            <version>5.4.1</version>
         </dependency>
         <!--导入jar-->
         <dependency>

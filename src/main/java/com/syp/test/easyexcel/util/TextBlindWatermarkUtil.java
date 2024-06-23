@@ -39,7 +39,8 @@ public class TextBlindWatermarkUtil {
         for (int i = 0; i < chars.length; i++) {
             wmStr.append(bit2charDict.get(String.valueOf(chars[i])));
         }
-        return wmStr.toString();
+        //前后都放入一个零宽字符（为了去除wps中的角标符号）
+        return '\u202D' + wmStr.toString() + '\u202D';
     }
 
     public static String embed(String text, String watermark) {
@@ -51,6 +52,13 @@ public class TextBlindWatermarkUtil {
         return textWithoutWatermark.substring(0, idx) + wm + textWithoutWatermark.substring(idx);
         //加入到最后
         //return textWithoutWatermark + wm;
+    }
+
+    public static String embedMiddle(String text, String watermark) {
+        String textWithoutWatermark = removeWatermark(text);
+        String wm = getWm(watermark);
+        //加入到最后
+        return textWithoutWatermark.substring(0, 1) + wm + textWithoutWatermark.substring(1);
     }
 
     public static String extract(String textEmbed){
@@ -82,11 +90,14 @@ public class TextBlindWatermarkUtil {
         }
 
         StringBuilder wmExtractBin = new StringBuilder();
+        //去除嵌入时加入的前后零宽字符
         for (int idx = idxLeft; idx < idxRight; idx++) {
             char c = textEmbed.charAt(idx);
             wmExtractBin.append(char2bitDict.get(c));
         }
         String wmExtractBinStr = wmExtractBin.toString();
+        //去除嵌入时加入的前后零宽字符
+        wmExtractBinStr = wmExtractBinStr.substring(1, wmExtractBinStr.length() - 1);
         System.out.println(wmExtractBinStr);
         return new String(convertBinaryToBytes(wmExtractBinStr), StandardCharsets.UTF_8);
     }

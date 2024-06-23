@@ -21,7 +21,7 @@ public class JavaCallPython {
 //    }
 
     public static void main(String[] args) {
-        String[] args1 = new String[]{"E:\\Program\\Anaconda3\\python.exe", "D:/Program/Python/videoRec.py", "1", "2"};
+        String[] args1 = new String[]{"/Users/mac/PycharmProjects/blind_watermark/venv/bin/python", "/Users/mac/PycharmProjects/PythonProject/main.py", "1", "2"};
         System.out.println("result=" + callPython(args1));
     }
 

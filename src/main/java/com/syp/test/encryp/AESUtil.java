@@ -1,4 +1,4 @@
-package com.syp.test.utils;
+package com.syp.test.encryp;
 
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;

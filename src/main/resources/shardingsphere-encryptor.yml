@@ -1,0 +1,30 @@
+#规则配置
+rules:
+  - !ENCRYPT
+    encryptors:
+      like_encryptor:
+        type: CHAR_DIGEST_LIKE
+      aes_encryptor:
+        type: AES
+        props:
+          aes-key-value: 123456abc
+      assisted_encryptor:
+        type: MD5
+
+    tables:
+      t_user:
+        columns:
+          name:
+            cipher:
+              name: name_encryptor
+              encryptorName: aes_encryptor
+            #            assistedQuery:
+            #              name: assisted_query_username
+            #              encryptorName: assisted_encryptor
+            likeQuery:
+              name: name_assisted
+              encryptorName: like_encryptor
+
+#属性配置
+props:
+  sql-show: true

@@ -6,15 +6,15 @@ public final class WatermarkParam {
     /**
      * 水印图片尺寸
      */
-    public final static int  width = 300;
-    public final static int height = 250;
+    public final static int  width = 150;
+    public final static int height = 125;
 
     /**
      * 水印字体
      */
     static final String fontType = "微软雅黑";
     static final int fontStyle = Font.BOLD;
-    static final int fontSize = 20;
+    static final int fontSize = 38;
     public final static Font font = new Font(fontType, fontStyle, fontSize);
 
     /**
@@ -25,7 +25,7 @@ public final class WatermarkParam {
     /**
      * 水印线宽
      */
-    public final static BasicStroke stroke = new BasicStroke(1);
+    public final static BasicStroke stroke = new BasicStroke(10);
 
     /**
      * 水印旋转角度
